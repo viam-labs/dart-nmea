@@ -1,0 +1,17 @@
+name: dart_nmea
+description: A package to interact with the gonmea Go package.
+version: 0.0.1
+repository: https://github.com/viam-labs/dart-nmea
+
+environment:
+  sdk: ^3.3.4
+
+# Add regular dependencies here.
+dependencies:
+  # path: ^1.8.0
+  ffi: ^1.1.2
+  path: ^1.9.0
+
+dev_dependencies:
+  lints: ^3.0.0
+  test: ^1.24.0
