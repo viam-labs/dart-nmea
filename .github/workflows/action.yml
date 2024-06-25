@@ -11,10 +11,27 @@ permissions:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        arch: [x64, arm64]
+        exclude:
+          - os: windows-latest
+            arch: arm64
+
+    runs-on: ${{ matrix.os }}
+
+    continue-on-error: true
 
     steps:
       - uses: actions/checkout@v4
+
+      - name: Reset git repository
+        run: git reset --hard
+
+      - name: Pull changes
+        run: git pull
 
       - name: Set up Go
         uses: actions/setup-go@v4
@@ -28,7 +45,6 @@ jobs:
       - name: Check for changes
         id: git-check
         run: |
-          git pull
           git add .
           git status --porcelain
           echo "changes=$(git status --porcelain | grep -q . && echo "true" || echo "false")" >> $GITHUB_OUTPUT
@@ -39,7 +55,8 @@ jobs:
         run: |
           git config --local user.email "github-actions[bot]@(link unavailable)"
           git config --local user.name "github-actions[bot]"
-          git commit -m "Add compiled Go shared library for ubuntu-latest"
+          git commit -m "Add compiled Go shared library for ${{ runner.os }} ${{ matrix.arch }}"
+          git merge origin/main
           git push
         shell: bash
 
