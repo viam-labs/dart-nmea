@@ -1,0 +1,6 @@
+github.com/erh/gonmea v0.0.0-20240520212544-9e64a948f654 h1:/sPyU5Sj/NSeRk6Miovmwmhz5DmUu5cUBapYog/hA+I=
+github.com/erh/gonmea v0.0.0-20240520212544-9e64a948f654/go.mod h1:06VoVU1RYKhRH+HIjwy70uOy1nn9w8m9pMxRxWumgYo=
+github.com/smartystreets/assertions v1.2.0 h1:42S6lae5dvLc7BrLu/0ugRtcFVjoJNMC/N3yZFZkDFs=
+github.com/smartystreets/assertions v1.2.0/go.mod h1:tcbTF8ujkAEcZ8TElKY+i30BzYlVhC/LOxJk7iOWnoo=
+go.viam.com/test v1.1.0 h1:KXf8crEwt0bHn5iMsjmXg0vPio/yzKGrfd20sWhe/t4=
+go.viam.com/test v1.1.0/go.mod h1:iULewngKZCHSB2QJa1xGSR6+0ICZIHbEfTUGqw0blLs=

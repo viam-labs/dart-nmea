@@ -1,0 +1,94 @@
+name: build and test
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+permissions:
+  contents: write
+
+jobs:
+  build-all:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.21"
+
+      - name: Set up cross-compilation tools
+        run: |
+          brew install mingw-w64
+          brew install FiloSottile/musl-cross/musl-cross
+          go install golang.org/x/mobile/cmd/gomobile@latest
+          go install golang.org/x/mobile/cmd/gobind@latest
+          gomobile init
+
+      - name: Build for all platforms
+        run: make build
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: all-libs
+          path: bin/
+
+  combine-and-push:
+    needs: build-all
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: all-libs
+          path: bin
+
+      - name: Check for changes
+        id: git-check
+        run: |
+          git add .
+          git status --porcelain
+          echo "changes=$(git status --porcelain | grep -q . && echo "true" || echo "false")" >> $GITHUB_OUTPUT
+
+      - name: Squash and force push if changes exist
+        if: steps.git-check.outputs.changes == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add .
+          git commit --amend -m "Update Go shared libraries and headers for all platforms"
+          git push --force origin main
+
+  dart-checks:
+    needs: build-all
+    runs-on: ubuntu-latest
+    env:
+      CI: "true"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dart-lang/setup-dart@9a04e6d73cca37bd455e0608d7e5092f881fd603
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: all-libs
+          path: bin
+      - name: Check library format
+        run: file bin/bin_linux_x86_64.so
+      - name: Install dependencies
+        run: dart pub get
+      - name: Verify formatting
+        run: dart format --output=none --set-exit-if-changed .
+      - name: Analyze project source
+        run: dart analyze
+      - name: Run Dart tests
+        run: dart test
