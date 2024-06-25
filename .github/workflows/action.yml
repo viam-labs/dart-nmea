@@ -1,0 +1,66 @@
+name: Go and Dart
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        arch: [x64, arm64]
+        exclude:
+          - os: windows-latest
+            arch: arm64
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.21"
+
+      - name: Build Go shared library
+        run: |
+          GOOS=${{ runner.os == 'macOS' && 'darwin' || runner.os == 'Windows' && 'windows' || 'linux' }} GOARCH=${{ matrix.arch == 'x64' && 'amd64' || 'arm64' }} make build
+        shell: bash
+
+      - name: Check for changes
+        id: git-check
+        run: |
+          git add .
+          git status --porcelain
+          echo "changes=$(if git status --porcelain | grep .; then echo "true"; else echo "false"; fi)" >> $GITHUB_OUTPUT
+        shell: bash
+
+      - name: Commit and push if changes exist
+        if: steps.git-check.outputs.changes == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git commit -m "Add compiled Go shared library for ${{ runner.os }} ${{ matrix.arch }}"
+          git push
+        shell: bash
+
+      - uses: dart-lang/setup-dart@9a04e6d73cca37bd455e0608d7e5092f881fd603
+
+      - name: Install dependencies
+        run: dart pub get
+
+      - name: Verify formatting
+        run: dart format --output=none --set-exit-if-changed .
+
+      - name: Analyze project source
+        run: dart analyze
+
+      - name: Run tests
+        run: dart test
