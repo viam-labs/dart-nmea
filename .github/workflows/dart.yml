@@ -37,19 +37,19 @@ jobs:
 
       - name: Verify binary
         run: |
-          file ../bin/bin.so
-          if ! file ../bin/bin.so | grep -q "ELF 64-bit LSB shared object"; then
+          file bin/bin.so
+          if ! file bin/bin.so | grep -q "ELF 64-bit LSB shared object"; then
             echo "Binary is not a Linux shared object"
             exit 1
           fi
-          ldd ../bin/bin.so || true
-          readelf -h ../bin/bin.so
+          ldd bin/bin.so || true
+          readelf -h bin/bin.so
 
       - name: Upload binary artifact
         uses: actions/upload-artifact@v2
         with:
           name: linux-binary
-          path: ../bin/bin.so
+          path: bin/bin.so
 
       - name: Run tests
         run: dart test
