@@ -47,18 +47,17 @@ jobs:
 
       - name: Generate binary for Linux
         run: |
-          mkdir -p ../build
-          go build -buildmode=c-shared -o ../build/bin.so main.go
+          make build
 
       - name: Verify binary
         run: |
-          file ../build/bin.so
-          if ! file ../build/bin.so | grep -q "ELF 64-bit LSB shared object"; then
+          file ../bin/bin.so
+          if ! file ../bin/bin.so | grep -q "ELF 64-bit LSB shared object"; then
             echo "Binary is not a Linux shared object"
             exit 1
           fi
-          ldd ../build/bin.so || true
-          readelf -h ../build/bin.so
+          ldd ../bin/bin.so || true
+          readelf -h ../bin/bin.so
 
       # Your project will need to have tests in test/ and a dependency on
       # package:test for this step to succeed. Note that Flutter projects will
