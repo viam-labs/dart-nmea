@@ -91,7 +91,7 @@ String _getDynamicLibraryPath() {
   } else if (Platform.isWindows) {
     return path.join(Directory.current.path, 'bin', 'bin.dll');
   } else {
-    return path.join(Directory.current.path, 'bin', 'bin.so');
+    return path.join(Directory.current.path, 'build', 'bin.so');
   }
 }
 
