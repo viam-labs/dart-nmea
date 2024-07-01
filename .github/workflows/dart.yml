@@ -47,6 +47,7 @@ jobs:
 
       - name: Generate binary for Linux
         run: |
+          mkdir -p ../build
           go build -buildmode=c-shared -o ../build/bin.so main.go
 
       - name: Verify binary
