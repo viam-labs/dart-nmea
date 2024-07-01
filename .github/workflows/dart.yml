@@ -52,7 +52,7 @@ jobs:
       - name: Verify binary
         run: |
           file ../build/bin.so
-          if [[ $(file ../bin/bin.so) != *"ELF 64-bit LSB shared object"* ]]; then
+          if ! file ../build/bin.so | grep -q "ELF 64-bit LSB shared object"; then
             echo "Binary is not a Linux shared object"
             exit 1
           fi
