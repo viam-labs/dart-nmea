@@ -37,6 +37,7 @@ jobs:
       - name: Check for changes
         id: git-check
         run: |
+          git pull
           git add .
           git status --porcelain
           echo "changes=$(git status --porcelain | grep -q . && echo "true" || echo "false")" >> $GITHUB_OUTPUT
