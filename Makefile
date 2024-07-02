@@ -1,4 +1,4 @@
-OUTPUT := bin_$(shell go env GOOS)_$(shell go env GOARCH).$(shell go env GOEXE)
+OUTPUT := bin_$(shell go env GOOS)_$(shell go env GOARCH)$(shell go env GOEXE) | sed 's|\.||g'
 
 build:
 	mkdir -p bin
