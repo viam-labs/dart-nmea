@@ -11,21 +11,16 @@ permissions:
 
 jobs:
   build:
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        arch: [x64, arm64]
-        exclude:
-          - os: windows-latest
-            arch: arm64
-
-    runs-on: ${{ matrix.os }}
-
-    continue-on-error: true
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
+
+      - name: Reset git repository
+        run: git reset --hard
+
+      - name: Pull changes
+        run: git pull
 
       - name: Set up Go
         uses: actions/setup-go@v4
@@ -52,8 +47,7 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git commit -m "Add compiled Go shared library for ${{ runner.os }} ${{ matrix.arch }}"
           git pull origin main
-          git rebase --interactive origin/main
-          git squash HEAD~2
+          git rebase origin/main
           git push origin main
         shell: bash
 
