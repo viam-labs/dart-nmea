@@ -106,8 +106,6 @@ String _getDynamicLibraryPath() {
     throw UnsupportedError('Unsupported architecture');
   }
 
-  
-
   return path.join(Directory.current.path, 'bin', 'bin_${os}_$arch');
 }
 
