@@ -39,7 +39,13 @@ jobs:
         run: |
           git add .
           git status --porcelain
-          echo "changes=$(if git status --porcelain | grep .; then echo "true"; else echo "false"; fi)" >> $GITHUB_OUTPUT
+          echo "changes=$(
+            if git status --porcelain | grep .; then
+              echo "true"
+            else
+              echo "false"
+            fi
+          )" >> $GITHUB_OUTPUT
         shell: bash
 
       - name: Commit and push if changes exist
