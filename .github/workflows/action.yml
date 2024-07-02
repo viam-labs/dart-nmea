@@ -20,7 +20,7 @@ jobs:
         run: git reset --hard
 
       - name: Pull changes
-        run: git pull
+        run: git pull origin main
 
       - name: Set up Go
         uses: actions/setup-go@v4
