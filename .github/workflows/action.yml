@@ -52,7 +52,8 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git commit -m "Add compiled Go shared library for ${{ runner.os }} ${{ matrix.arch }}"
           git pull origin main
-          git rebase origin/main
+          git rebase --interactive origin/main
+          git squash HEAD~2
           git push origin main
         shell: bash
 
