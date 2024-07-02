@@ -29,6 +29,6 @@ endif
 
 build:
 	mkdir -p bin
-	go build -buildmode=c-shared -o ./bin/$(OUTPUT) main.go
+	CGO_ENABLED=1 go build -buildmode=c-shared -o ./bin/$(OUTPUT) main.go
 
 .PHONY: build
