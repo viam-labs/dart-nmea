@@ -47,11 +47,12 @@ jobs:
       - name: Commit and push if changes exist
         if: steps.git-check.outputs.changes == 'true'
         run: |
+          git config --local pull.rebase true
           git config --local user.email "github-actions[bot]@(link unavailable)"
           git config --local user.name "github-actions[bot]"
           git commit -m "Add compiled Go shared library for ${{ runner.os }} ${{ matrix.arch }}"
           git pull origin main
-          git merge origin/main
+          git rebase origin/main
           git push origin main
         shell: bash
 

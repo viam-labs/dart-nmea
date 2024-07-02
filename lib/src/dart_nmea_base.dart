@@ -106,7 +106,16 @@ String _getDynamicLibraryPath() {
     throw UnsupportedError('Unsupported architecture');
   }
 
-  return path.join(Directory.current.path, 'bin', 'bin_${os}_$arch');
+  String extension;
+  if (Platform.isMacOS) {
+    extension = 'dylib';
+  } else if (Platform.isWindows) {
+    extension = 'dll';
+  } else {
+    extension = 'so';
+  }
+
+  return path.join(Directory.current.path, 'bin', 'bin_${os}_$arch.$extension');
 }
 
 Map<dynamic, dynamic> _stringToMap(String dartString) {
