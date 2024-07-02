@@ -34,8 +34,7 @@ jobs:
 
       - name: Build Go shared library
         run: |
-          CGO_ENABLED=1 GOOS=${{ runner.os == 'macOS' && 'darwin' || runner.os == 'Windows' && 'windows' || 'linux' }} GOARCH=${{ matrix.arch == 'x64' && 'amd64' || 'arm64' }} make build
-        shell: bash
+          make build
 
       - name: Check for changes
         id: git-check
