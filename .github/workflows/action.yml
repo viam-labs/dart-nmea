@@ -71,7 +71,7 @@ jobs:
 
   dart-checks:
     needs: build-all
-    runs-on: macos-latest
+    runs-on: windows-latest
     env:
       CI: "true"
     steps:
