@@ -41,7 +41,7 @@ jobs:
 
   combine-and-push:
     needs: build-all
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
         with:
@@ -71,7 +71,7 @@ jobs:
 
   dart-checks:
     needs: build-all
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     env:
       CI: "true"
     steps:
